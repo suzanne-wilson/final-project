@@ -20,4 +20,4 @@
     7. Publish to a Power BI dashboard.
 
 ### a screenshot of the k-means procedure output is here.
-![k-means](/fastclus_brands.jpg)
+![k-means](/fastclus_brands.JPG)
