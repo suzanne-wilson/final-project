@@ -10,7 +10,7 @@
     Can we identify patterns of device use in neurovascular procedures?
     Can we extract health outcomes data for patients who are treated with these devices?
     
-#### The roadmap for the project is here:
+#### The roadmap for the project is here: 
     1. Access the data and create a description of the columns.
     2. Using multiple techniques, extract and classify the device information.
     3. Select a subset that has complete follow-up data.
@@ -19,3 +19,5 @@
     6. Create a data visualization that enables patterns to be identified.
     7. Publish to a Power BI dashboard.
 
+### a screenshot of the k-means procedure output is here.
+![k-means](\fastclus_brands.jpg)
