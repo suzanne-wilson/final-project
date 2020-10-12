@@ -21,3 +21,16 @@
 
 ### a screenshot of the k-means procedure output is here.
 ![k-means](/fastclus_brands.JPG)
+
+## Second Week
+#### Description of the data exploration phase of the project
+In this phase, I loaded my key datasets into Power BI Desktop and created a number of visualizations to look for potential sources of bias in my conclusions.  I had trouble getting all the data I wanted in the proper form; this will be solved when I get a more powerful computer (FedEx says tomorrow).
+
+The visualizations were based on the number of procedures in the database that stroke patients had in 2017.  Although the data is very granular, the location of hospitals is only given as one of the nine U.S. Census Divisions.  Other hospital descriptors include urban vs. rural, teaching hospital (yes or no), and size (number of beds).
+
+#### Description of the analysis phase of the project Slides 
+Selecting which pieces of the analysis to include in the data story has been challenging.  The first draft of the dashboard is here.
+![draft dashboard](/draft_dashboard.jpg)
+
+
+#### Presentations are drafted in Google Slides.

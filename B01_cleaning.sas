@@ -1,4 +1,4 @@
-*=======================================================================*
+﻿*=======================================================================*
 | Program: 																|
 |			B01_cleaning.sas									|
 =========================================================================   
@@ -52,7 +52,7 @@ libname sraw "D:\PHDRaw" access = readonly;
 /*------------------------------------------------------------------
 Part 3: setup programs and macros
 --------------------------------------------------------------------*/
-%*read in Ben Nelson's spreadsheet of sku numbers and devices;
+%*read in Jeff Nelson's spreadsheet of sku numbers and devices;
 %*pro tip: there are non-readable characters in some fields in the alternate_skus column;
 %*to find them, select the blank values at top of dropdown menu (not (blank) values);
 

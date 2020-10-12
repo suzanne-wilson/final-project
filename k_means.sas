@@ -1,4 +1,4 @@
-﻿*=======================================================================*
+*=======================================================================*
 | Program: 																|
 |			k_means.sas									|
 =========================================================================   
@@ -26,30 +26,18 @@ libname raw "D:\PHDRaw" access = readonly;
 
 /* run fastclus for k from 3 to 8 */
 
-%macro doFASTCLUS;
-
+%macro dofastclus;
      %do k= 3 %to 8;
-
           proc fastclus
-
                data= phd.brands
-
                out= fcOut
-
                maxiter= 100
-
                converge= 0          /* run to complete convergence */
-
                radius= 100          /* look for initial centroids that are far apart */
-
                maxclusters= &k
-
                summary;
-
           run;
-
      %end;
-
 %mend;
 
-%doFASTCLUS
+%dofastclus

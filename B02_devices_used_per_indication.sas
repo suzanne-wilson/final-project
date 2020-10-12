@@ -28,193 +28,101 @@ libname PHD "D:\PHD";
 
 *Get diagnoses for AIS, ruptured, unruptured, ICAD;
 proc sql;
-create table temp.diagnoses as
-select distinct
-	PAT.medrec_key
-	,ICD.pat_key
-	,PAT.prov_id
-	,PAT.disc_mon
-	,substr(left(put(PAT.disc_mon, z12.)), 6, 4) as dx_yr
-	,substr(left(put(PAT.disc_mon, z12.)), 11, 2) as dx_mon
-	,mdy(input(calculated dx_mon, 8.), PAT.disc_mon_seq, input(calculated dx_yr, 8.)) as dx_dt format date9.
-	,max(case when ICD.icd_code like ('I63.%') then 1 else 0 end) as AIS
-	,max(case when ICD.icd_code like ('I67.1%') then 1 else 0 end) as unruptured
-/*Assume SAH is ruptured aneurysm per https://www.fortherecordmag.com/archives/032811p27.shtml but it also covers ruptured berry aneurysm and ruptured congenital aneurysms*/
-	,max(case when ICD.icd_code like ('I60.%') then 1 else 0 end) as ruptured
-/*Assume cerebral atherosclerosis is the same as ICAD*/
-	,max(case when ICD.icd_code like ('I67.2%') then 1 else 0 end) as icad
-from raw.str_2016_paticd_diag	ICD
-left join
-	 raw.str_2016_pat_noapr	PAT
-on
-	 ICD.pat_key = PAT.pat_key
-where ICD.icd_pri_sec in ('P', 'S') 
-		and (
-			ICD.icd_code like ('I63.%') or ICD.icd_code like ('I67.1%') or ICD.icd_code like ('I60.%') or ICD.icd_code like ('I67.2%')
-			)
-group by 1, 2, 3
-union
-select distinct
-	PAT.medrec_key
-	,ICD.pat_key
-	,PAT.prov_id
-	,PAT.disc_mon
-	,substr(left(put(PAT.disc_mon, z12.)), 6, 4) as dx_yr
-	,substr(left(put(PAT.disc_mon, z12.)), 11, 2) as dx_mon
-	,mdy(input(calculated dx_mon, 8.), PAT.disc_mon_seq, input(calculated dx_yr, 8.)) as dx_dt format date9.
-	,max(case when ICD.icd_code like ('I63.%') then 1 else 0 end) as AIS
-	,max(case when ICD.icd_code like ('I67.1%') then 1 else 0 end) as unruptured
-/*Assume SAH is ruptured aneurysm per https://www.fortherecordmag.com/archives/032811p27.shtml but it also covers ruptured berry aneurysm and ruptured congenital aneurysms*/
-	,max(case when ICD.icd_code like ('I60.%') then 1 else 0 end) as ruptured
-/*Assume cerebral atherosclerosis is the same as ICAD*/
-	,max(case when ICD.icd_code like ('I67.2%') then 1 else 0 end) as icad
-from raw.str_2017_paticd_diag	ICD
-left join
-	 raw.str_2017_pat_noapr	PAT
-on
-	 ICD.pat_key = PAT.pat_key
-where ICD.icd_pri_sec in ('P', 'S')
-		and (
-			ICD.icd_code like ('I63.%') or ICD.icd_code like ('I67.1%') or ICD.icd_code like ('I60.%') or ICD.icd_code like ('I67.2%')
-			)
-group by 1, 2, 3
-union
-select distinct
-	PAT.medrec_key
-	,ICD.pat_key
-	,PAT.prov_id
-	,PAT.disc_mon
-	,substr(left(put(PAT.disc_mon, z12.)), 6, 4) as dx_yr
-	,substr(left(put(PAT.disc_mon, z12.)), 11, 2) as dx_mon
-	,mdy(input(calculated dx_mon, 8.), PAT.disc_mon_seq, input(calculated dx_yr, 8.)) as dx_dt format date9.
-	,max(case when ICD.icd_code like ('I63.%') then 1 else 0 end) as AIS
-	,max(case when ICD.icd_code like ('I67.1%') then 1 else 0 end) as unruptured
-/*Assume SAH is ruptured aneurysm per https://www.fortherecordmag.com/archives/032811p27.shtml but it also covers ruptured berry aneurysm and ruptured congenital aneurysms*/
-	,max(case when ICD.icd_code like ('I60.%') then 1 else 0 end) as ruptured
-/*Assume cerebral atherosclerosis is the same as ICAD*/
-	,max(case when ICD.icd_code like ('I67.2%') then 1 else 0 end) as icad
-from raw.str_2018_paticd_diag	ICD
-left join
-	 raw.str_2018_pat_noapr	PAT
-on
-	 ICD.pat_key = PAT.pat_key
-where ICD.icd_pri_sec in ('P', 'S')
-		and (
-			ICD.icd_code like ('I63.%') or ICD.icd_code like ('I67.1%') or ICD.icd_code like ('I60.%') or ICD.icd_code like ('I67.2%')
-			)
-group by 1, 2, 3
-union
-select distinct
-	PAT.medrec_key
-	,ICD.pat_key
-	,PAT.prov_id
-	,PAT.disc_mon
-	,substr(left(put(PAT.disc_mon, z12.)), 6, 4) as dx_yr
-	,substr(left(put(PAT.disc_mon, z12.)), 11, 2) as dx_mon
-	,mdy(input(calculated dx_mon, 8.), PAT.disc_mon_seq, input(calculated dx_yr, 8.)) as dx_dt format date9.
-	,max(case when ICD.icd_code like ('I63.%') then 1 else 0 end) as AIS
-	,max(case when ICD.icd_code like ('I67.1%') then 1 else 0 end) as unruptured
-/*Assume SAH is ruptured aneurysm per https://www.fortherecordmag.com/archives/032811p27.shtml but it also covers ruptured berry aneurysm and ruptured congenital aneurysms*/
-	,max(case when ICD.icd_code like ('I60.%') then 1 else 0 end) as ruptured
-/*Assume cerebral atherosclerosis is the same as ICAD*/
-	,max(case when ICD.icd_code like ('I67.2%') then 1 else 0 end) as icad
-from raw.str_2019_paticd_diag ICD
-left join
-	 raw.str_2019_pat_noapr	PAT
-on
-	 ICD.pat_key = PAT.pat_key
-where ICD.icd_pri_sec in ('P', 'S')
-		and (
-			ICD.icd_code like ('I63.%') or ICD.icd_code like ('I67.1%') or ICD.icd_code like ('I60.%') or ICD.icd_code like ('I67.2%')
-			)
-group by 1, 2, 3
-order by pat_key, medrec_key, dx_dt;
-run;
+	create table temp.diagnoses_1718 as
+	select distinct
+		PAT.medrec_key
+		,ICD.pat_key
+		,PAT.prov_id
+		,PAT.disc_mon
+		,substr(left(put(PAT.disc_mon, z12.)), 6, 4) as dx_yr
+		,substr(left(put(PAT.disc_mon, z12.)), 11, 2) as dx_mon
+		,mdy(input(calculated dx_mon, 8.), PAT.disc_mon_seq, input(calculated dx_yr, 8.)) as dx_dt format date9.
+		,max(case when ICD.icd_code like ('I63.%') then 1 else 0 end) as AIS
+		,max(case when ICD.icd_code like ('I67.1%') then 1 else 0 end) as unruptured
+	/*Assume SAH is ruptured aneurysm per https://www.fortherecordmag.com/archives/032811p27.shtml but it also covers ruptured berry aneurysm and ruptured congenital aneurysms*/
+		,max(case when ICD.icd_code like ('I60.%') then 1 else 0 end) as ruptured
+	/*Assume cerebral atherosclerosis is the same as ICAD*/
+		,max(case when ICD.icd_code like ('I67.2%') then 1 else 0 end) as icad
+	from raw.str_2017_paticd_diag	ICD
+	left join
+		 raw.str_2017_pat_noapr	PAT
+	on
+		 ICD.pat_key = PAT.pat_key
+	where ICD.icd_pri_sec in ('P', 'S')
+			and (
+				ICD.icd_code like ('I63.%') or ICD.icd_code like ('I67.1%') or ICD.icd_code like ('I60.%') or ICD.icd_code like ('I67.2%')
+				)
+	group by 1, 2, 3
+	union
+	select distinct
+		PAT.medrec_key
+		,ICD.pat_key
+		,PAT.prov_id
+		,PAT.disc_mon
+		,substr(left(put(PAT.disc_mon, z12.)), 6, 4) as dx_yr
+		,substr(left(put(PAT.disc_mon, z12.)), 11, 2) as dx_mon
+		,mdy(input(calculated dx_mon, 8.), PAT.disc_mon_seq, input(calculated dx_yr, 8.)) as dx_dt format date9.
+		,max(case when ICD.icd_code like ('I63.%') then 1 else 0 end) as AIS
+		,max(case when ICD.icd_code like ('I67.1%') then 1 else 0 end) as unruptured
+	/*Assume SAH is ruptured aneurysm per https://www.fortherecordmag.com/archives/032811p27.shtml but it also covers ruptured berry aneurysm and ruptured congenital aneurysms*/
+		,max(case when ICD.icd_code like ('I60.%') then 1 else 0 end) as ruptured
+	/*Assume cerebral atherosclerosis is the same as ICAD*/
+		,max(case when ICD.icd_code like ('I67.2%') then 1 else 0 end) as icad
+	from raw.str_2018_paticd_diag	ICD
+	left join
+		 raw.str_2018_pat_noapr	PAT
+	on
+		 ICD.pat_key = PAT.pat_key
+	where ICD.icd_pri_sec in ('P', 'S')
+			and (
+				ICD.icd_code like ('I63.%') or ICD.icd_code like ('I67.1%') or ICD.icd_code like ('I60.%') or ICD.icd_code like ('I67.2%')
+				)
+	group by 1, 2, 3
+	order by pat_key, medrec_key, dx_dt;
 quit;
 
 *Now figure out how many got devices based on CPT codes;
 proc sql;
-create table cpt_raw as
-select distinct
-	*
-from raw.str_2016_patcpt
-where CPT_code in ('61624', '75894', 'C1757', 'C1887')
-union 
-select distinct
-	*
-from raw.str_2017_patcpt
-where CPT_code in ('61624', '75894', 'C1757', 'C1887')
-union
-select distinct
-	*
-from raw.str_2018_patcpt
-where CPT_code in ('61624', '75894', 'C1757', 'C1887')
-union
-select distinct
-	*
-from raw.str_2019_patcpt
-where CPT_code in ('61624', '75894', 'C1757', 'C1887')
-order by pat_key;
-run;
+	create table cpt_raw_1718 as
+	select distinct
+		*
+	from raw.str_2017_patcpt
+	where CPT_code in ('61624', '75894', 'C1757', 'C1887')
+	union
+	select distinct
+		*
+	from raw.str_2018_patcpt
+	where CPT_code in ('61624', '75894', 'C1757', 'C1887')
+	order by pat_key;
 quit;
 
 *Look through CPT codes from CDM table;
 proc sql;
-create table cdm_cpt as
-select distinct
-	PATBILL.*
-	,CDM.hosp_chg_desc
-from raw.str_2016_patbill	PATBILL
-inner join
-	raw.str_hospchg	CDM
-on
-	CDM.hosp_chg_id = PATBILL.hosp_chg_id	
-where upper(hosp_chg_desc) like ('%C1757%') or upper(hosp_chg_desc) like ('%C1887%') or upper(hosp_chg_desc) like ('%61624%') or upper(hosp_chg_desc) like ('%75894%') 
-union
-select distinct
-	PATBILL.*
-	,CDM.hosp_chg_desc
-from raw.str_2017_patbill	PATBILL
-inner join
-	raw.str_hospchg	CDM
-on
-	CDM.hosp_chg_id = PATBILL.hosp_chg_id	
-where upper(hosp_chg_desc) like ('%C1757%') or upper(hosp_chg_desc) like ('%C1887%') or upper(hosp_chg_desc) like ('%61624%') or upper(hosp_chg_desc) like ('%75894%') 
-union
-select distinct
-	PATBILL.*
-	,CDM.hosp_chg_desc
-from raw.str_2018_patbill	PATBILL
-inner join
-	raw.str_hospchg	CDM
-on
-	CDM.hosp_chg_id = PATBILL.hosp_chg_id	
-where upper(hosp_chg_desc) like ('%C1757%') or upper(hosp_chg_desc) like ('%C1887%') or upper(hosp_chg_desc) like ('%61624%') or upper(hosp_chg_desc) like ('%75894%') 
-union
-select distinct
-	PATBILL.*
-	,CDM.hosp_chg_desc
-from raw.str_2019_patbill	PATBILL
-inner join
-	raw.str_hospchg	CDM
-on
-	CDM.hosp_chg_id = PATBILL.hosp_chg_id	
-where upper(hosp_chg_desc) like ('%C1757%') or upper(hosp_chg_desc) like ('%C1887%') or upper(hosp_chg_desc) like ('%61624%') or upper(hosp_chg_desc) like ('%75894%') 
-order by pat_key;
-run;
+	create table cdm_cpt_1718 as
+	select distinct
+		PATBILL.*
+		,CDM.hosp_chg_desc
+	from raw.str_2017_patbill	PATBILL
+	inner join
+		raw.str_hospchg	CDM
+	on
+		CDM.hosp_chg_id = PATBILL.hosp_chg_id	
+	where upper(hosp_chg_desc) like ('%C1757%') or upper(hosp_chg_desc) like ('%C1887%') or upper(hosp_chg_desc) like ('%61624%') or upper(hosp_chg_desc) like ('%75894%') 
+	union
+	select distinct
+		PATBILL.*
+		,CDM.hosp_chg_desc
+	from raw.str_2018_patbill	PATBILL
+	inner join
+		raw.str_hospchg	CDM
+	on
+		CDM.hosp_chg_id = PATBILL.hosp_chg_id	
+	where upper(hosp_chg_desc) like ('%C1757%') or upper(hosp_chg_desc) like ('%C1887%') or upper(hosp_chg_desc) like ('%61624%') or upper(hosp_chg_desc) like ('%75894%') 
+	order by pat_key;
 quit;
 
 proc sql;
-create table icd_dev as
-select distinct
-	*
-	,'NEUROVASCULAR' as indication	
-from raw.str_2016_paticd_proc
-where icd_code like ('03LG3B%') or icd_code like ('03LG3D%') or icd_code like ('03VG3B%') or icd_code like ('03VG3D%') or icd_code like ('03VG3HZ%') or icd_code like ('03VG3DZ%') 
-	or icd_code in ('03CG3Z7', '03CK3Z7', '03CL3Z7', '03CP3Z7', '03CQ3Z7', '03CG3ZZ', '03CK3ZZ', '03CL3ZZ', '03CP3ZZ',
-					'03CQ3ZZ', '03CG3Z7', '03CK3Z7', '03CL3Z7', '03CP3Z7', '03CQ3Z7', 'B31R1ZZ', 'B31RYZZ'
-					'3E03317')
-union
+create table icd_dev_1718 as
 select distinct
 	*	
 	,'NEUROVASCULAR' as indication	
@@ -234,66 +142,46 @@ where icd_code like ('03LG3B%') or icd_code like ('03LG3D%') or icd_code like ('
 	or icd_code in ('03CG3Z7', '03CK3Z7', '03CL3Z7', '03CP3Z7', '03CQ3Z7', '03CG3ZZ', '03CK3ZZ', '03CL3ZZ', '03CP3ZZ',
 					'03CQ3ZZ', '03CG3Z7', '03CK3Z7', '03CL3Z7', '03CP3Z7', '03CQ3Z7', 'B31R1ZZ', 'B31RYZZ'
 					'3E03317')
-union
-select distinct
-	*	
-	,'NEUROVASCULAR' as indication	
-
-from raw.str_2019_paticd_proc
-where icd_code like ('03LG3B%') or icd_code like ('03LG3D%') or icd_code like ('03VG3B%') or icd_code like ('03VG3D%') or icd_code like ('03VG3HZ%') or icd_code like ('03VG3DZ%')
-	or icd_code in ('03CG3Z7', '03CK3Z7', '03CL3Z7', '03CP3Z7', '03CQ3Z7', '03CG3ZZ', '03CK3ZZ', '03CL3ZZ', '03CP3ZZ',
-					'03CQ3ZZ', '03CG3Z7', '03CK3Z7', '03CL3Z7', '03CP3Z7', '03CQ3Z7', 'B31R1ZZ', 'B31RYZZ'
-					'3E03317')
 order by pat_key
 ;
-run;
 quit;
 
 *Look through MSDRG;
 proc sql;
-create table msdrg as
-select distinct
-	pat_key
-from raw.str_2016_pat_noapr 
-where ms_drg in (25, 26, 27, 23, 24, 61, 62, 63, 64, 65, 66)
-union
-select distinct
-	pat_key
-from raw.str_2017_pat_noapr 
-where ms_drg in (25, 26, 27, 23, 24, 61, 62, 63, 64, 65, 66)
-union
-select distinct
-	pat_key
-from raw.str_2018_pat_noapr 
-where ms_drg in (25, 26, 27, 23, 24, 61, 62, 63, 64, 65, 66)
-union
-select distinct
-	pat_key
-from raw.str_2019_pat_noapr 
-where ms_drg in (25, 26, 27, 23, 24, 61, 62, 63, 64, 65, 66)
-order by pat_key
-;
-run;
+	create table msdrg_1718 as
+	select distinct
+		pat_key
+	from raw.str_2017_pat_noapr 
+	where ms_drg in (25, 26, 27, 23, 24, 61, 62, 63, 64, 65, 66)
+	union
+	select distinct
+		pat_key
+	from raw.str_2018_pat_noapr 
+	where ms_drg in (25, 26, 27, 23, 24, 61, 62, 63, 64, 65, 66)
+	order by pat_key
+	;
 quit;
 
 *Merge all the procedures together;
 *Now sort out all the codes and make sure there are no dupications in pat_key;
-data temp.proc_patkey;
-set 
-	cdm_cpt (in=in1 keep = pat_key serv_day rename=(serv_day=proc_day))
-	cpt_raw (in=in2 keep = pat_key)
-	icd_dev (in=in3 keep = pat_key proc_day)
-	msdrg (in=in4 keep = pat_key)
-;
-*Assume if pulled from CPT dataset that it is outpatient and the day is 0;
-if in2 = 1 then proc_day = 0;
+data temp.proc_patkey_1718;
+	set 
+		cdm_cpt_1718 (in=in1 keep = pat_key serv_day rename=(serv_day=proc_day))
+		cpt_raw_1718 (in=in2 keep = pat_key)
+		icd_dev_1718 (in=in3 keep = pat_key proc_day)
+		msdrg_1718 (in=in4 keep = pat_key)
+	;
+	*Assume if pulled from CPT dataset that it is outpatient and the day is 0;
+	if in2 = 1 then proc_day = 0;
+run;
+
 proc sort nodupkey; by pat_key;
 run;
 
 *Now merge the diagnosis data and the procedure data together to come up with the list of discharges that have the NV diagnosis and a procedure;
-data phd.dxpx;
-	merge temp.diagnoses (in=in1)
-	      temp.proc_patkey (in=in2);
+data phd.dxpx_1718;
+	merge temp.diagnoses_1718 (in=in1)
+	      temp.proc_patkey_1718 (in=in2);
 	by pat_key;
 	if in1 = 1 and in2 = 1;
 run;
@@ -302,55 +190,14 @@ run;
 ** NOW GET THE DEVICE NAMES FROM THE CDM DATASET, MAKE SURE TO RESTRICT ON SUPPLY, OR AND RESTRICT ON STANDARDIZED CHARGE CODES ***;
 *Join with CDM records and ICD records and PCS records;
 proc sql;
-create table phd.devices as
+create table phd.devices_1718 as
 select distinct
 	CDM.hosp_chg_desc
 	,CDM.hosp_chg_id
 	,PCS.std_chg_desc
 	,PCS.std_chg_code
 	,count(distinct COHORT.pat_key) as disc_cnt
-from DXPX COHORT
-inner join
-	raw.str_2016_patbill	PATBILL
-on
-	PATBILL.pat_key = COHORT.pat_key
-left join
-	raw.str_hospchg	CDM
-on
-	PATBILL.hosp_chg_id = CDM.hosp_chg_id
-left join
-	raw.str_chgmstr	PCS
-on
-	PATBILL.std_chg_code = PCS.std_chg_code
-where PCS.sum_dept_desc in ("SUPPLY", "OR") and PCS.std_chg_code in ('270270010000000', '270270028520000', '270270028810000', '270270041710000',
-							'270270045610000', '270270045630000', '270270110050000', '270270110280000',
-							'270270110720000', '270270112010000', '270270990700000', '270278005210000',
-							'270278933710000', '270278995240000', '270278995600000', '270278933710000', '270270010320000', '270270010890000', '270270011610000', '270270011740000',
-							'270272927800000', '270272927820000', '270272927840000', '270272930110000', '270270010000000', '270270010320000', '270270010890000', '270270011730000',
-							'270272930110000', '270270110720000', '270270010000000', '270270011610000', '270270990700000', '270270045850000', '270270009380000', '270270013100000', 
-							'270270990000002', '270272927810000', '270270010320000', '270270110590000', '270272911143000', '270270990120000', '270270028110000', '270270032870000', 
-							'270270045820000', '360360372130000', '270270110050000', '270278002650000', '270270026760000', '360360365500000', '270278995240000', '270270026380000', 
-							'270278992840000', '270270110060000', '270270110030000', '270270045610000', '270270110850000', '270270012190000', '270270112010000', '270278995700000', 
-							'270278995600000', '270278933710000', '270270009270000', '270270011740000', '270270012260000', '270270010890000', '270270011200000', '270270042420000', 
-							'270270001010000', '270270104550000', '270270054950000', '270270038890000', '270270002080000', '270270031180000', '270270058900000', '270272927840000', 
-							'270272927800000', '270270054930000', '270270029410000', '270270006730000', '270272956400001', '270270101300000', '270270008850000', '270270013160000', 
-							'270270009890000', '270270010860000', '270270110430000', '270270011620000', '360360100210000', '270270111780000', '270270028280000', '270270053270000', 
-							'270270009160000', '270270009720000', '270270990000001', '270270030270000', '270270042590000', '270270011730000', '270272956380000', '270272927820000', 
-							'270270008970000', '270278919730000', '270270002680000', '270270006600000', '270270006610000', '270270006630000', '270270006640000', '270270006650000',
-							'270270008850000', '270270008910000', '270270008990000', '270270009070000', '270270009350000', '270270011200000', '270270011750000', '270270014790000',
-							'270270014800000', '270270014830000', '270270027840000', '270270028110000', '270270028820000', '270270031360000', '270270032870000', '270270042190000'
-							'270270045610000', '270270095090000', '270270110590000', '270270111940000', '270278995240000', '270270990280000', '270270031370000', '270270990530000',
-							'250250014060000')
-
-group by 1
-union
-select distinct
-	CDM.hosp_chg_desc
-	,CDM.hosp_chg_id
-	,PCS.std_chg_desc
-	,PCS.std_chg_code
-	,count(distinct COHORT.pat_key) as disc_cnt
-from DXPX COHORT
+from DXPX_1718 COHORT
 inner join
 	raw.str_2017_patbill	PATBILL
 on
@@ -391,7 +238,7 @@ select distinct
 	,PCS.std_chg_desc
 	,PCS.std_chg_code
 	,count(distinct COHORT.pat_key) as disc_cnt
-from DXPX COHORT
+from DXPX_1718 COHORT
 inner join
 	raw.str_2018_patbill	PATBILL
 on
@@ -425,55 +272,13 @@ where PCS.sum_dept_desc in ("SUPPLY", "OR") and PCS.std_chg_code in ('2702700100
 							'250250014060000')
 
 group by 1
-union
-select distinct
-	CDM.hosp_chg_desc
-	,CDM.hosp_chg_id
-	,PCS.std_chg_desc
-	,PCS.std_chg_code
-	,count(distinct COHORT.pat_key) as disc_cnt
-from DXPX COHORT
-inner join
-	raw.str_2019_patbill	PATBILL
-on
-	PATBILL.pat_key = COHORT.pat_key
-left join
-	raw.str_hospchg	CDM
-on
-	PATBILL.hosp_chg_id = CDM.hosp_chg_id
-left join
-	raw.str_chgmstr	PCS
-on
-	PATBILL.std_chg_code = PCS.std_chg_code
-where PCS.sum_dept_desc in ("SUPPLY", "OR") and PCS.std_chg_code in ('270270010000000', '270270028520000', '270270028810000', '270270041710000',
-							'270270045610000', '270270045630000', '270270110050000', '270270110280000',
-							'270270110720000', '270270112010000', '270270990700000', '270278005210000',
-							'270278933710000', '270278995240000', '270278995600000', '270278933710000', '270270010320000', '270270010890000', '270270011610000', '270270011740000',
-							'270272927800000', '270272927820000', '270272927840000', '270272930110000', '270270010000000', '270270010320000', '270270010890000', '270270011730000',
-							'270272930110000', '270270110720000', '270270010000000', '270270011610000', '270270990700000', '270270045850000', '270270009380000', '270270013100000', 
-							'270270990000002', '270272927810000', '270270010320000', '270270110590000', '270272911143000', '270270990120000', '270270028110000', '270270032870000', 
-							'270270045820000', '360360372130000', '270270110050000', '270278002650000', '270270026760000', '360360365500000', '270278995240000', '270270026380000', 
-							'270278992840000', '270270110060000', '270270110030000', '270270045610000', '270270110850000', '270270012190000', '270270112010000', '270278995700000', 
-							'270278995600000', '270278933710000', '270270009270000', '270270011740000', '270270012260000', '270270010890000', '270270011200000', '270270042420000', 
-							'270270001010000', '270270104550000', '270270054950000', '270270038890000', '270270002080000', '270270031180000', '270270058900000', '270272927840000', 
-							'270272927800000', '270270054930000', '270270029410000', '270270006730000', '270272956400001', '270270101300000', '270270008850000', '270270013160000', 
-							'270270009890000', '270270010860000', '270270110430000', '270270011620000', '360360100210000', '270270111780000', '270270028280000', '270270053270000', 
-							'270270009160000', '270270009720000', '270270990000001', '270270030270000', '270270042590000', '270270011730000', '270272956380000', '270272927820000', 
-							'270270008970000', '270278919730000', '270270002680000', '270270006600000', '270270006610000', '270270006630000', '270270006640000', '270270006650000',
-							'270270008850000', '270270008910000', '270270008990000', '270270009070000', '270270009350000', '270270011200000', '270270011750000', '270270014790000',
-							'270270014800000', '270270014830000', '270270027840000', '270270028110000', '270270028820000', '270270031360000', '270270032870000', '270270042190000'
-							'270270045610000', '270270095090000', '270270110590000', '270270111940000', '270278995240000', '270270990280000', '270270031370000', '270270990530000',
-							'250250014060000')
-
-group by 1
 order by hosp_chg_desc
 ;
-run;
 quit;
 
 
 data devices1;
-	set phd.devices;
+	set phd.devices_1718;
 	by hosp_chg_desc;
 	delim = " ";
 *Count the number of words in the text field;
@@ -487,42 +292,42 @@ run;
 
 *Now create a macro called wordchka which scans each word to see if it matches for two words;
 %macro worchka (keyword = , firstword = , secondword = , name= , franchise = , category = , company = );
-%do j = 0 %to 20 %by 4;
-%let k = %eval(&j * 3);
-%put &j;
-%put &k;
-data devices1;
-	length dev_name $30. company_name $30. category $30. franchise $10.;
-	set devices1;
-	tmpa = soundex(&firstword);
-	tmpb = soundex(&secondword);
-	%do i = 1 %to 14;
-	tmp&i = soundex(upcase(word&i));
-	comp1_&i=compged(tmpa, tmp&i);
-	comp2_&i=compged(tmpb, tmp&i);
-	spedis1_&i=spedis(upcase(word&i), &firstword);
-	spedis2_&i=spedis(upcase(word&i), &secondword);
+	%do j = 0 %to 20 %by 4;
+	%let k = %eval(&j * 3);
+	%put &j;
+	%put &k;
+	data devices1;
+		length dev_name $30. company_name $30. category $30. franchise $10.;
+		set devices1;
+		tmpa = soundex(&firstword);
+		tmpb = soundex(&secondword);
+		%do i = 1 %to 14;
+		tmp&i = soundex(upcase(word&i));
+		comp1_&i=compged(tmpa, tmp&i);
+		comp2_&i=compged(tmpb, tmp&i);
+		spedis1_&i=spedis(upcase(word&i), &firstword);
+		spedis2_&i=spedis(upcase(word&i), &secondword);
+		%end;
+	*Now check for any instance where the comged and spedis match for word 1 and word 2;
+		array a comp1_1 - comp1_14;
+		array b comp2_1 - comp2_14;
+		array c spedis1_1 - spedis1_14;
+		array d spedis2_1 - spedis2_14;
+		do over d;
+			if (a le &k) then chk1 = 1;
+			if (b le &k) then chk2 = 1;
+			if (c le &j) then chk3 = 1;
+			if (d le &j) then chk4 = 1;
+		end;
+		sp = " ";
+		if (chk1 = 1 and chk2 = 1 and chk3 = 1 and chk4 = 1) and dev_name = " " then do;
+			dev_name = catx(sp, &firstword, &secondword);
+			company_name = "&company";
+			franchise = "&franchise";
+			category = "&category";
+		end;
+	run;
 	%end;
-*Now check for any instance where the comged and spedis match for word 1 and word 2;
-	array a comp1_1 - comp1_14;
-	array b comp2_1 - comp2_14;
-	array c spedis1_1 - spedis1_14;
-	array d spedis2_1 - spedis2_14;
-	do over d;
-		if (a le &k) then chk1 = 1;
-		if (b le &k) then chk2 = 1;
-		if (c le &j) then chk3 = 1;
-		if (d le &j) then chk4 = 1;
-	end;
-	sp = " ";
-	if (chk1 = 1 and chk2 = 1 and chk3 = 1 and chk4 = 1) and dev_name = " " then do;
-		dev_name = catx(sp, &firstword, &secondword);
-		company_name = "&company";
-		franchise = "&franchise";
-		category = "&category";
-	end;
-run;
-%end;
 %mend worchka;
 %worchka (keyword = 'SOLITAIRE 2', firstword = 'SOLITAIRE', secondword = '2', name = SOLITAIRE 2, franchise = AIS, category=STENTRIEVER, company= MEDTRONIC);
 %worchka (keyword = 'AXS CATALYST 5', firstword = 'AXS', secondword = '5', name = AXS CATALYST 5, franchise = HEM, category=DELIVERY CATHETER HEM, company= STRYKER);
@@ -703,31 +508,31 @@ run;
 
 *Rename the dataset for another round of fuzzy matching;
 data devices2;
-set devices1;
+	set devices1;
 run;
 *Now create a macro called wordchk which scans each word to see if it matches for one word;
 %macro worchk (keyword = , oneword = , name= , franchise = , category = , company = );
-%do j = 0 %to 20 %by 4;
-%let k = %eval(&j * 3);
-%put &j;
-%put &k;
-data devices2;
-	length dev_name $30. company_name $30. category $30. franchise $10.;
-	set devices2;
-	tmp0 = soundex(&oneword);
-	%do i = 1 %to 14;
-	tmp&i = soundex(upcase(word&i));
-	compged&i=compged(tmp0, tmp&i);
-	spedis&i=spedis(upcase(word&i), &oneword);
-	if (compged&i le &k and spedis&i le &j) and dev_name = " " then do;
-		dev_name = &oneword;
-		company_name = "&company";
-		franchise = "&franchise";
-		category = "&category";
-	end;
+	%do j = 0 %to 20 %by 4;
+	%let k = %eval(&j * 3);
+	%put &j;
+	%put &k;
+	data devices2;
+		length dev_name $30. company_name $30. category $30. franchise $10.;
+		set devices2;
+		tmp0 = soundex(&oneword);
+		%do i = 1 %to 14;
+		tmp&i = soundex(upcase(word&i));
+		compged&i=compged(tmp0, tmp&i);
+		spedis&i=spedis(upcase(word&i), &oneword);
+		if (compged&i le &k and spedis&i le &j) and dev_name = " " then do;
+			dev_name = &oneword;
+			company_name = "&company";
+			franchise = "&franchise";
+			category = "&category";
+		end;
+		%end;
+	run;
 	%end;
-run;
-%end;
 %mend worchk;
 %worchk (keyword = 'SOLITAIRE 2', oneword = 'SOLITAIRE', name = SOLITAIRE 2, franchise = AIS, category=STENTRIEVER, company= MEDTRONIC);
 %worchk (keyword = 'AXS CATALYST 5', oneword = 'AXS', name = AXS CATALYST 5, franchise = HEM, category=DELIVERY CATHETER HEM, company= STRYKER);
@@ -1156,17 +961,16 @@ run;
 *Get devices discharge count and name;
 
 proc sql;
-create table dev_cnt as
-select distinct
-	franchise
-	,category
-	,company_name
-	,dev_name
-	,sum(disc_cnt) as disc_tot
-from devices2
-where dev_name ne " "
-group by 1, 2, 3, 4
-order by 1, 2, 3, 4
-;
-run;
+	create table dev_cnt_1718 as
+	select distinct
+		franchise
+		,category
+		,company_name
+		,dev_name
+		,sum(disc_cnt) as disc_tot
+	from devices2
+	where dev_name ne " "
+	group by 1, 2, 3, 4
+	order by 1, 2, 3, 4
+	;
 quit;
