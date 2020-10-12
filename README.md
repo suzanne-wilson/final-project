@@ -28,6 +28,8 @@ In this phase, I loaded my key datasets into Power BI Desktop and created a numb
 
 The visualizations were based on the number of procedures in the database that stroke patients had in 2017.  Although the data is very granular, the location of hospitals is only given as one of the nine U.S. Census Divisions.  Other hospital descriptors include urban vs. rural, teaching hospital (yes or no), and size (number of beds).
 
+There is a chloropleth map in the report that feeds into the dashboard.  The U.S. Census has shapefiles on the website, including one for the U.S. Census Divisions.  That zipfile was uploaded to map___ and converted into a topoJSON file.  Unfortunately, the visualization had too much data to pin to the dashboard.  I am continuing to work on this.
+
 #### Description of the analysis phase of the project Slides 
 Selecting which pieces of the analysis to include in the data story has been challenging.  The first draft of the dashboard is here.
 ![draft dashboard](/draft_dashboard_for_mod2.JPG)
