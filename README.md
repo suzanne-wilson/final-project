@@ -30,6 +30,6 @@ The visualizations were based on the number of procedures in the database that s
 
 #### Description of the analysis phase of the project Slides 
 Selecting which pieces of the analysis to include in the data story has been challenging.  The first draft of the dashboard is here.
-![draft dashboard](/draft dashboard for mod2.JPG)
+![draft dashboard](/draft_dashboard_for_mod2.JPG)
 
 #### Presentations are drafted in Google Slides.
