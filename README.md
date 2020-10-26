@@ -38,4 +38,5 @@ For the machine learning part of the project, I decided to use supervised machin
 
 ![final_dashboard.JPG](/final_dashboard.JPG)
 
-#### Presentations are drafted in Google Slides.
+#### Presentation is in Power Point, and can be found here.
+![Visualizing Real World Data.JPG](/Visualizing Real World Data.JPG)
