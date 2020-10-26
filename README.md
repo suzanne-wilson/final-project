@@ -20,7 +20,7 @@
     7. Publish to a Power BI dashboard.
 
 ### a screenshot of the supervised machine learning output from the logistic regression procedure is here.
-![proc logistic.JPG](/proc logistic.JPG)
+![proc_logistic.JPG](/proc_logistic.JPG)
 
 ## Second Week
 #### Description of the data exploration phase of the project
@@ -39,4 +39,4 @@ For the machine learning part of the project, I decided to use supervised machin
 ![final_dashboard.JPG](/final_dashboard.JPG)
 
 #### Presentation is in Power Point, and can be found here.
-![Visualizing Real World Data.JPG](/Visualizing Real World Data.JPG)
+![Visualizing_RWD.JPG](/Visualizing_RWD.JPG)
