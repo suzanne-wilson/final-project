@@ -39,4 +39,4 @@ For the machine learning part of the project, I decided to use supervised machin
 ![final_dashboard.JPG](/final_dashboard.JPG)
 
 #### Presentation is in Power Point, and can be found here.
-![Visualizing_RWD.JPG](/Visualizing_RWD.JPG)
+![Visualizing_RWD.pptx](/Visualizing_RWD.pptx)
